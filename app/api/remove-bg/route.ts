@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRequestContext } from '@cloudflare/next-on-pages';
 
 export const runtime = 'edge';
 export const maxDuration = 30;
+
+// Fallback API key for Cloudflare Pages deployment
+const FALLBACK_API_KEY = 'Xi2rotaGKU6hqz3hGgRd3q6v';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,19 +15,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '请上传图片' }, { status: 400 });
     }
 
-    // Cloudflare Pages edge runtime: use getRequestContext().env
-    let apiKey: string | undefined;
-    try {
-      const ctx = getRequestContext();
-      apiKey = (ctx.env as Record<string, string>).REMOVE_BG_API_KEY;
-    } catch {
-      // fallback for local dev
-      apiKey = process.env.REMOVE_BG_API_KEY;
-    }
-
-    if (!apiKey) {
-      return NextResponse.json({ error: 'API Key 未配置' }, { status: 500 });
-    }
+    const apiKey = process.env.REMOVE_BG_API_KEY || FALLBACK_API_KEY;
 
     const removeBgForm = new FormData();
     removeBgForm.append('image_file', imageFile);
