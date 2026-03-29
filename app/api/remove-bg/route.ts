@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestContext } from '@cloudflare/next-on-pages';
 
 export const runtime = 'edge';
 export const maxDuration = 30;
@@ -12,7 +13,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '请上传图片' }, { status: 400 });
     }
 
-    const apiKey = process.env.REMOVE_BG_API_KEY;
+    // Cloudflare Pages edge runtime: use getRequestContext().env
+    let apiKey: string | undefined;
+    try {
+      const ctx = getRequestContext();
+      apiKey = (ctx.env as Record<string, string>).REMOVE_BG_API_KEY;
+    } catch {
+      // fallback for local dev
+      apiKey = process.env.REMOVE_BG_API_KEY;
+    }
+
     if (!apiKey) {
       return NextResponse.json({ error: 'API Key 未配置' }, { status: 500 });
     }
