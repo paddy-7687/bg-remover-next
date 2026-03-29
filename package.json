@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages",
-    "build:server": "next build",
+    "build": "next build",
+    "build:cf": "npx @cloudflare/next-on-pages",
     "start": "next start"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.2.2",
-    "next": "^16.2.1",
+    "next": "^15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
