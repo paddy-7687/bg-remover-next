@@ -1,41 +1,51 @@
-# 图片去背景服务
+# bg-remover-next
 
-基于 **Next.js + Tailwind CSS** 构建的图片去背景工具，支持部署到 Vercel / Cloudflare Pages。
+图片去背景 SaaS — Next.js 15 + Cloudflare Pages + D1
+
+## 功能
+
+- Google OAuth 登录
+- 用量控制（未登录1次/天，免费3次/月，Pro 50次/月，一次性包20次）
+- 注册送1次额度
+- remove.bg API 去背景
+- 个人中心（用量统计、套餐信息）
 
 ## 技术栈
 
-- **框架**：Next.js 15 (App Router)
-- **样式**：Tailwind CSS
-- **API**：Remove.bg
-- **部署**：Vercel（推荐）
+- **前端**: Next.js 15, React 19, Tailwind CSS
+- **后端**: Cloudflare Pages (Edge Runtime)
+- **数据库**: Cloudflare D1 (SQLite)
+- **部署**: Cloudflare Pages via `@cloudflare/next-on-pages`
 
 ## 本地开发
 
 ```bash
-# 1. 安装依赖
 npm install
-
-# 2. 配置环境变量
-cp .env.local.example .env.local
-# 编辑 .env.local，填入 Remove.bg API Key
-
-# 3. 启动开发服务器
 npm run dev
 ```
 
-访问 http://localhost:3000
-
-## 部署到 Vercel
+## 部署
 
 ```bash
-npx vercel --prod
+npm run build:cf
+npx wrangler pages deploy .vercel/output/static --project-name=bg-remover-next
 ```
 
-在 Vercel 控制台添加环境变量 `REMOVE_BG_API_KEY`。
+## 环境变量（Cloudflare Pages 后台配置）
 
-## 功能
+| 变量名 | 说明 |
+|--------|------|
+| `GOOGLE_CLIENT_ID` | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret |
+| `REMOVE_BG_API_KEY` | remove.bg API Key |
 
-- 🖼️ 拖拽/点击上传图片
-- 🔄 左右对比预览（原图 vs 去背景）
-- ⬇️ 一键下载 PNG（透明背景）
-- 📱 移动端适配
+D1 绑定名：`DB`，数据库：`bg-remover-db`
+
+## 定价策略
+
+| 套餐 | 价格 | 额度 |
+|------|------|------|
+| 免费 | $0 | 3次/月 + 注册送1次 |
+| Pro 月付 | $9.9/月 | 50次/月 |
+| Pro 年付 | $59.9/年 | 50次/月 |
+| 一次性包 | $4.9 | 20次（永不过期）|

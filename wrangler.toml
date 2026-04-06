@@ -3,3 +3,8 @@ compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = ".vercel/output/static"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bg-remover-db"
+database_id = "d8440430-048b-4ec6-8f1a-3aefa1861704"
