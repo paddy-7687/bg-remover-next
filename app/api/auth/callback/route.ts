@@ -50,6 +50,7 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (err) {
     console.error('Auth callback error:', err);
-    return NextResponse.redirect(new URL('/?error=auth_failed', request.url));
+    const errMsg = encodeURIComponent(err instanceof Error ? err.message : String(err));
+    return NextResponse.redirect(new URL(`/?error=auth_failed&detail=${errMsg}`, request.url));
   }
 }

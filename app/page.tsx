@@ -27,6 +27,15 @@ export default function Home() {
   const [showDashboard, setShowDashboard] = useState(false);
 
   useEffect(() => {
+    // 检查 URL 里的错误参数
+    const params = new URLSearchParams(window.location.search);
+    const urlError = params.get('error');
+    const detail = params.get('detail');
+    if (urlError) {
+      setError(`登录失败: ${detail || urlError}`);
+      // 清理 URL 参数
+      window.history.replaceState({}, '', '/');
+    }
     fetch('/api/auth/me')
       .then(r => r.json() as Promise<{ user: UserInfo | null }>)
       .then((d) => { setUser(d.user); setUserLoading(false); })
@@ -199,9 +208,9 @@ export default function Home() {
 
             <div className="flex gap-3">
               {user.plan === 'free' && (
-                <button className="flex-1 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold text-sm hover:opacity-90 transition-all">
+                <a href="/pricing" className="flex-1 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold text-sm hover:opacity-90 transition-all text-center">
                   升级 Pro — $9.9/月（50次）
-                </button>
+                </a>
               )}
               <a
                 href="/api/auth/logout"
@@ -281,7 +290,7 @@ export default function Home() {
                 <> · <a href="/api/auth/login" className="underline font-semibold">立即登录</a></>
               )}
               {needUpgrade && user && user.plan === 'free' && (
-                <> · <button className="underline font-semibold">升级 Pro</button></>
+                <> · <a href="/pricing" className="underline font-semibold">升级 Pro</a></>
               )}
             </div>
           )}
